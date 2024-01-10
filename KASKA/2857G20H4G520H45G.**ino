@@ -1,0 +1,55 @@
+#include "SPI.h"      // библиотека для протокола SPI
+#include "nRF24L01.h" // библиотека для nRF24L01+
+#include "RF24.h"     // библиотека для радио модуля
+
+RF24 radio(9,10); // Для MEGA2560 замените на RF24 radio(9,53);
+
+
+struct { char Whom[10]=""; char Command[10]=""; char Parametr[5]=""; } MESSAGE;
+struct { char From[5]="Kaska"; float Power=0; char Status[20]="123"; } KASKA;
+
+void setup() {
+  Serial.begin(9600);   
+    Serial.println(123); 
+
+}
+
+void loop() {
+  //Инициализация радиомодуля
+  radio.begin(); // включаем радио модуль                                             // Инициируем работу nRF24L01+
+  //Serial.println(radio.begin());
+  radio.setChannel      (100);                                // Указываем канал передачи данных (от 0 до 125), 27 - значит передача данных осуществляется на частоте 2,427 ГГц.
+  radio.setDataRate     (RF24_1MBPS);                        // Указываем скорость передачи данных (RF24_250KBPS, RF24_1MBPS, RF24_2MBPS), RF24_1MBPS - 1Мбит/сек.
+  radio.setPALevel      (RF24_PA_MAX);                       // Указываем мощность передатчика (RF24_PA_MIN=-18dBm, RF24_PA_LOW=-12dBm, RF24_PA_HIGH=-6dBm, RF24_PA_MAX=0dBm).
+
+  radio.enableAckPayload();                                  // Указываем что в пакетах подтверждения приёма есть блок с пользовательскими данными.
+  radio.openReadingPipe (1, 0xAABBCCDD22LL);                 // Открываем 1 трубу с адресом 0xAABBCCDD11, для приема данных.
+  radio.startListening  ();                                  // Включаем приемник, начинаем прослушивать открытые трубы.
+  radio.writeAckPayload (1, &KASKA, sizeof(KASKA) );     // Помещаем данные всего массива ackData в буфер FIFO. Как только будут получены любые данные от передатчика на 1 трубе, то данные из буфера FIFO будут отправлены этому передатчику вместе с пакетом подтверждения приёма его данных.
+  
+  delay(100);
+  //Serial.println(123);
+  if(radio.available()){     
+    Serial.println(123);     
+    Serial.println(MESSAGE.Whom);                          
+    radio.read(&MESSAGE, sizeof(MESSAGE)); 
+    if (String(MESSAGE.Whom) == "To_Bomba"){
+      Serial.println(MESSAGE.Whom);
+      //if (String(MESSAGE.Command) == "Get_Info") { radio.writeAckPayload(1, &BOMBA, sizeof(BOMBA)); }//SET_STATUS("Whait_Gayka"); }  
+      /*if (String(MESSAGE.Command) == "Set_Stat") {
+        if (String(MESSAGE.Parametr) == "WU") { radio.writeAckPayload(1, &BOMBA, sizeof(BOMBA)); Timeout_Sleep=1800000; }
+        if (String(MESSAGE.Parametr) == "DO") { radio.writeAckPayload(1, &BOMBA, sizeof(BOMBA)); SET_STATUS("Dinamo_Off"); }
+        if (String(MESSAGE.Parametr) == "WG") { radio.writeAckPayload(1, &BOMBA, sizeof(BOMBA)); SET_STATUS("Whait_Gayka"); }
+        if (String(MESSAGE.Parametr) == "WCE"){ radio.writeAckPayload(1, &BOMBA, sizeof(BOMBA)); SET_STATUS("Wait_Code_Enter"); }
+        if (String(MESSAGE.Parametr) == "WTS"){ radio.writeAckPayload(1, &BOMBA, sizeof(BOMBA)); SET_STATUS("Wait_Timer_Start"); }
+        if (String(MESSAGE.Parametr) == "WTE"){ radio.writeAckPayload(1, &BOMBA, sizeof(BOMBA)); SET_STATUS("Wait_Timer_End"); }
+        if (String(MESSAGE.Parametr) == "TE") { radio.writeAckPayload(1, &BOMBA, sizeof(BOMBA)); SET_STATUS("Timer_End"); }
+        //radio.writeAckPayload(1, &BOMBA, sizeof(BOMBA));
+      } */
+    }
+    bool buff;
+    //radio.writeAckPayload(1, &buff, sizeof(buff));
+  }
+
+  delay(100);
+}
