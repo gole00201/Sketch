@@ -2,7 +2,7 @@
 #include <Wire.h>
 #include <RF24.h>
 #include <printf.h>
-RF24 SendRadio(9,10);
+RF24 SendRadio(10, A4);
 
 int value;
 
