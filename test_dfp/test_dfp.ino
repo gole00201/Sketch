@@ -17,7 +17,7 @@ void setup () {
 
 void loop () {
 	mp3_play (3002);
-    Serial.print("Play sound");
+    // проигрываем файл mp3/0001.mp3
 	delay (6000);
 
 	mp3_next ();
