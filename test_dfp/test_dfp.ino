@@ -16,7 +16,7 @@ void setup () {
 }
 
 void loop () {
-	mp3_play (3002);
+	mp3_play (49);
     // проигрываем файл mp3/0001.mp3
 	delay (6000);
 
