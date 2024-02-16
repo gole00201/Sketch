@@ -2,27 +2,35 @@
 #include <DFPlayer_Mini_Mp3.h>
 
 SoftwareSerial mySerial(9, 8);
-// используем 10 и 11 пины
-// для программного порта
-// 10 - RX, 11 - TX
+// 9 - RX, 8 - TX
 
 void setup () {
-	Serial.begin (9600);
+	Serial.begin(9600);
     // открываем порт для консоли
-	mySerial.begin (9600);
+	mySerial.begin(9600);
     // открываем софт-порт
-	mp3_set_serial (mySerial);
+	mp3_set_serial(mySerial);
     // задаем порт для плеера
-	mp3_set_volume (15);
+	mp3_set_volume(30);
     //устанавливаем уровень громкости
 }
 
 void loop () {
-	mp3_play (3002);
-    // проигрываем файл mp3/0001.mp3
+	mp3_play (1001);
+    Serial.print("Play sound");
 	delay (6000);
-
-	mp3_next ();
+    mp3_play (1002);
+    Serial.print("Play sound");
+	delay (6000);
+    mp3_play (1003);
+    Serial.print("Play sound");
+	delay (6000);
+    mp3_play (1004);
+    Serial.print("Play sound");
+	delay (6000);
+    mp3_play (1005);
+    Serial.print("Play sound");
+	delay (6000);
     // включаем следующий файл
 	delay (6000);
 }
